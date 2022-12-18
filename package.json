@@ -1,0 +1,35 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "simple CRUD API using in-memory database underneath",
+  "main": "./src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start:dev": "nodemon",
+    "start:prod": "tsc && nodemon ./dist/index.js",
+    "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PartyZzzan77/CRUD-API.git"
+  },
+  "author": "PartyZzzan77",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PartyZzzan77/CRUD-API/issues"
+  },
+  "homepage": "https://github.com/PartyZzzan77/CRUD-API#readme",
+  "dependencies": {
+    "@types/node": "^18.11.17",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.0"
+  }
+}
