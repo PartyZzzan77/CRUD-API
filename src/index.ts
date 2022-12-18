@@ -3,24 +3,16 @@ import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { TServer, TResponse, TRequest } from './types/serverTypes';
 import { checkKeys } from './helpers/checkKeys.js';
+import { IUserRequest } from './types/userTypes';
 
 config();
-interface IUserRequest {
-    id: string;
-    username: string;
-    age: number;
-    hobbies: string[] | []
-}
 
 let users: IUserRequest[] = [];
-
 
 const PORT = +process.env.DB_PORT! || 3000;
 const HOST = process.env.DB_HOST as string;
 
-
 const server: TServer = http.createServer(async (req: TRequest, res: TResponse) => {
-
 
     if (req.url === '/api/users' && req.method === 'GET') {
         res.statusCode = 200;
@@ -73,9 +65,10 @@ const server: TServer = http.createServer(async (req: TRequest, res: TResponse) 
                 const targetUser = users.filter(user => user.id === id);
 
                 if (targetUser.length) {
-                    res.setHeader('Content-Type', 'application/json');
                     users = users.filter(user => user.id !== id);
+                    
                     res.statusCode = 204;
+                    res.setHeader('Content-Type', 'application/json');
                     return res.end(JSON.stringify(targetUser[0]));
                 } else {
                     res.statusCode = 404;
@@ -84,7 +77,28 @@ const server: TServer = http.createServer(async (req: TRequest, res: TResponse) 
 
             }
             if (req.method === 'PUT') {
-                console.log('r');
+                const targetUserID = users.filter(user => user.id === id)[0].id;
+
+                if (targetUserID) {
+                    const buffers = [];
+                    for await (const chunk of req) {
+                        buffers.push(chunk);
+                    }
+
+                    const updateUser: IUserRequest = JSON.parse(Buffer.concat(buffers).toString());
+
+                    updateUser.id = targetUserID;
+                    users = users.filter(user => user.id !== targetUserID);
+                    users.push(updateUser);
+
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    return res.end(JSON.stringify(updateUser));
+                } else {
+                    res.statusCode = 404;
+                    return res.end('Not found');
+                }
+
             }
         } else {
             res.statusCode = 400;
