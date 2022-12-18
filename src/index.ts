@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { TServer, TResponse, TRequest } from './types/serverTypes';
 import { checkKeys } from './helpers/checkKeys.js';
+import url from 'node:url';
 // import fs from 'fs';
 // import path, { dirname } from 'path';
 //import { fileURLToPath } from 'url';
@@ -21,11 +22,10 @@ const users: IUserRequest[] = [];
 
 const PORT = +process.env.DB_PORT! || 3000;
 const HOST = process.env.DB_HOST as string;
-//const __dirname = dirname(fileURLToPath(import.meta.url));
+
 
 const server: TServer = http.createServer(async (req: TRequest, res: TResponse): Promise<void> => {
 
-    //const filePath = req.url && path.join(__dirname, 'index.html');
 
     if (req.url === '/api/users' && req.method === 'GET') {
         res.statusCode = 200;
@@ -54,10 +54,30 @@ const server: TServer = http.createServer(async (req: TRequest, res: TResponse):
             res.statusCode = 400;
             res.end('Bad Request');
         }
+    } else if (req.url?.includes('/api/users/')) {
+        const regExp = new RegExp(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/, 'gm');
+
+        const id = req.url.split('/').slice(3).join();
+
+        if (regExp.test(id) && req.method === 'GET') {
+            const targetUser = users.filter(user => user.id === id);
+
+            if (targetUser.length) {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(targetUser[0]));
+            } else {
+                res.statusCode = 404;
+                res.end('User not found');
+            }
+        } else {
+            res.statusCode = 400;
+            res.end('invalid ID');
+        }
     }
 });
 
 
 server.listen(PORT, HOST, () => {
-    console.log(`server is running on ${HOST}:${PORT}`);
+    console.log(`server is running on ${HOST}:${PORT} `);
 });
