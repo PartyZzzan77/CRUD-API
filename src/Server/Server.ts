@@ -50,7 +50,7 @@ class Server implements IServer {
             const count = os.cpus().length;
             console.log(`\nActivated ${count} forks 🤖 \n`);
             console.log(`Primary pid: ${pid}`);
-            let port = PORT;
+            let port = PORT - 1;
             for (let i = 0; i < count; i++) {
                 port++;
                 const worker = cluster.fork({ port });
