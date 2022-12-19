@@ -50,13 +50,26 @@ class Server implements IServer {
             const count = os.cpus().length;
             console.log(`\nActivated ${count} forks 🤖 \n`);
             console.log(`Primary pid: ${pid}`);
-            for (let i = 0; i < count; i++) cluster.fork();
+            let port = PORT;
+            for (let i = 0; i < count; i++) {
+                port++;
+                const worker = cluster.fork({ port });
+
+                worker.on('exit', () => {
+                    console.log(`PID died:${worker.process.pid}`);
+                    port++;
+                    cluster.fork({ port });
+                });
+
+            }
         }
         else {
-            this._server.listen(PORT, HOST, () => {
-                console.log(`server is running on ${HOST}:${PORT} `);
+            const envPort = Number(process.env['port']) || PORT;
+
+            this._server.listen(envPort, HOST, () => {
+                console.log(`✨server is running on ${HOST}:${envPort} PID: ${pid}`);
             });
-            console.log(`Process ID: ${pid} PORT: ${PORT}`);
+
         }
     }
 }
