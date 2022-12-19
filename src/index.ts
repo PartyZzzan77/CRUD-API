@@ -49,7 +49,6 @@ const server: TServer = http.createServer(async (req: TRequest, res: TResponse) 
 
             if (regExp.test(id)) {
                 if (req.method === 'GET') {
-
                     const targetUser = users.filter(user => user.id === id);
 
                     if (targetUser.length) {
