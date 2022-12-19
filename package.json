@@ -11,6 +11,7 @@
         "build": "tsc",
         "start:dev": "nodemon",
         "start:prod": "tsc && nodemon ./dist/index.js",
+        "start:multi": "tsc && nodemon ./dist/index.js --cluster=run",
         "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
         "test": "jest"
     },
