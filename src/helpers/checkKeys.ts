@@ -1,3 +1,7 @@
-export const checkKeys = (obj: string[], arr: string[]): boolean => {
-    return obj.every(e => arr.includes(e.toLowerCase()));
+import { TCheckKeys } from '../types/helpersTypes';
+import { IUserRequest } from '../types/userTypes';
+
+export const checkKeys: TCheckKeys = (obj: IUserRequest, arr: string[]): boolean => {
+    const target = Object.keys(obj).sort();
+    return target.every(e => arr.includes(e.toLowerCase())) && target.length === arr.length;
 };
