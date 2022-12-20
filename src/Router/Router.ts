@@ -19,6 +19,7 @@ class Router implements IRouter {
                         res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
 
+                        process.send!(this._db);
                         res.end(JSON.stringify(this._db));
                         return;
                     } catch {
@@ -48,14 +49,20 @@ class Router implements IRouter {
 
                             res.statusCode = 201;
                             res.setHeader('Content-Type', 'application/json');
+
+                            process.send!(newUser);
                             res.end(JSON.stringify(newUser));
                             return;
                         } else {
                             res.statusCode = 400;
+
+                            process.send!('Bad Request');
                             return res.end('Bad Request');
                         }
                     } catch {
                         res.statusCode = 500;
+
+                        process.send!('server internal error 500');
                         res.write('server internal error 500');
                     }
                 }
@@ -71,18 +78,26 @@ class Router implements IRouter {
                             if (idChecker(req) && targetUser) {
                                 res.statusCode = 200;
                                 res.setHeader('Content-Type', 'application/json');
+
+                                process.send!(targetUser);
                                 res.end(JSON.stringify(targetUser));
                                 return;
                             } else if (idChecker(req) && !targetUser) {
                                 res.statusCode = 404;
+
+                                process.send!('Not Found');
                                 return res.end('Not Found');
                             } else {
                                 res.statusCode = 400;
+
+                                process.send!('Bad Request');
                                 return res.end('Bad Request');
                             }
                         }
                     } catch {
                         res.statusCode = 500;
+
+                        process.send!('server internal error 500');
                         res.write('server internal error 500');
                     }
                 }
@@ -108,17 +123,25 @@ class Router implements IRouter {
 
                             res.statusCode = 200;
                             res.setHeader('Content-Type', 'application/json');
+
+                            process.send!(updateUser);
                             res.end(JSON.stringify(updateUser));
                             return;
                         } else if (!targetUser) {
                             res.statusCode = 404;
+
+                            process.send!('Not Found');
                             return res.end('Not Found');
                         } else {
                             res.statusCode = 400;
+
+                            process.send!('Bad Request');
                             return res.end('Bad Request');
                         }
                     } catch {
                         res.statusCode = 500;
+
+                        process.send!('server internal error 500');
                         res.write('server internal error 500');
                     }
                 }
@@ -135,17 +158,25 @@ class Router implements IRouter {
 
                             res.statusCode = 204;
                             res.setHeader('Content-Type', 'application/json');
+
+                            process.send!(targetUser);
                             res.end(JSON.stringify(targetUser));
                             return;
                         } else if (idChecker(req) && !targetUser) {
                             res.statusCode = 404;
+
+                            process.send!('Not Found');
                             return res.end('Not Found');
                         } else {
                             res.statusCode = 400;
+
+                            process.send!('Bad Request');
                             return res.end('Bad Request');
                         }
                     } catch {
                         res.statusCode = 500;
+
+                        process.send!('server internal error 500');
                         res.write('server internal error 500');
                     }
                 }

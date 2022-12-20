@@ -8,6 +8,7 @@ import { IUserRequest } from '../types/userTypes';
 import { HOST, PORT, isMulti, pid, } from '../config.js';
 import { getTargetUser } from '../helpers/getTargetUser.js';
 import { checkId } from './../helpers/checkId.js';
+
 class Server implements IServer {
     protected _server: TServer;
     protected _users: IUserRequest[];
@@ -15,7 +16,6 @@ class Server implements IServer {
     constructor(router: IRouter) {
         this._server = http.createServer(async (req: TRequest, res: TResponse) => {
             try {
-                // TODO To visualize the cluster To view the headers in the network
                 res.setHeader('pid', pid);
 
                 const routerHash = router.init();
@@ -48,9 +48,11 @@ class Server implements IServer {
     public init() {
         if (cluster.isPrimary && isMulti) {
             const count = os.cpus().length;
+            let port = PORT - 1;
+
             console.log(`\nActivated ${count} forks 🤖 \n`);
             console.log(`Primary pid: ${pid}`);
-            let port = PORT - 1;
+
             for (let i = 0; i < count; i++) {
                 port++;
                 const worker = cluster.fork({ port });
@@ -60,10 +62,18 @@ class Server implements IServer {
                     port++;
                     cluster.fork({ port });
                 });
-
+                
+                worker.on('message', (data: IUserRequest[] | string) => {
+                    console.log('Worker to Primary', data);
+                    worker.send(data);
+                });
             }
         }
         else {
+            process.on('message', (data: IUserRequest[] | string) => {
+                console.log('Primary to worker', data);
+            });
+
             const envPort = Number(process.env['port']) || PORT;
 
             this._server.listen(envPort, HOST, () => {
