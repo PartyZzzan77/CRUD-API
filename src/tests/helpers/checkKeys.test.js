@@ -1,15 +1,13 @@
-import { checkKeys } from '../helpers/checkKeys';
-
+import { checkKeys } from '../../helpers/checkKeys';
 
 describe('checkKeys:', () => {
-
     it('Should be true', () => {
         const keys = ['id', 'username', 'age', 'hobbies'];
         const target = {
             id: 'test',
             username: 'Amigo',
             age: 24,
-            hobbies: ['hob1', 'hob2']
+            hobbies: ['hob1', 'hob2'],
         };
 
         expect(checkKeys(target, keys)).toBeTruthy();

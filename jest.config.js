@@ -2,4 +2,7 @@
 export default {
     preset: 'ts-jest',
     testEnvironment: 'node',
+    transform: {
+        '^.+\\.(js|ts)$': 'ts-jest',
+    },
 };
