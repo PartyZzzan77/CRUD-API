@@ -1,3 +1,4 @@
+import { checkId } from './../../helpers/checkId';
 import { HEADERS } from '../../constants/HEADERS';
 import { MESSAGES } from '../../constants/MESSAGES';
 import { STATUS_CODE } from '../../constants/STATUS_CODE';
@@ -33,7 +34,7 @@ export const putUserDB: THandler = async (db, req, res, keysChecker, idChecker, 
 
             res.end(JSON.stringify(updateUser));
             return;
-        } else if (!targetUser) {
+        } else if (idChecker(req) && !targetUser) {
             res.statusCode = STATUS_CODE.NOT_FOUND;
 
             if (process.send) {

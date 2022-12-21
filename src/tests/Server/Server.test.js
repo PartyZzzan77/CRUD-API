@@ -7,8 +7,9 @@ import Router from '../../Router/Router';
 import Server from '../../Server/Server';
 
 describe('Server', () => {
-    describe('Scenario #1', () => {
-        const server = request(new Server(new Router(), db).testServer());
+    const server = request(new Server(new Router(), db).testServer());
+
+    describe('Scenario #1 Description in the technical specification', () => {
         let testId = '';
 
         it('Get all records with a GET api/response request (an empty array is expected)', async () => {
@@ -73,6 +74,60 @@ describe('Server', () => {
 
             expect(response.statusCode).toBe(STATUS_CODE.NOT_FOUND);
             expect(response.text).toBe(MESSAGES.NOT_FOUND);
+        });
+    });
+
+    describe('Scenario 2 errors in queries', () => {
+        const invalidID = '8bf0dee1-3243-49e5-9553-35c45edf8asc6dab';
+        const validID = '8bf0dee1-3243-49e5-9553-35cedf8c6dab';
+        const invalidUser = { name: 'Elusive Joe' };
+
+        it('When trying to make a GET request to an invalid URL it should be Not Found', async () => {
+            const response = await server.get(`${URL_CONSTANTS.BASE}s`);
+
+            expect(response.statusCode).toBe(STATUS_CODE.NOT_FOUND);
+        });
+
+        it('When trying to find a user with an invalid ID there should be a BAD REQUEST', async () => {
+            const response = await server.get(URL_CONSTANTS.BASE_ID + invalidID);
+
+            expect(response.statusCode).toBe(STATUS_CODE.BAD_REQUEST);
+        });
+
+        it('The server should respond with a 404 status code and an appropriate message if the record with id === userId does not exist', async () => {
+            const response = await server.get(URL_CONSTANTS.BASE_ID + validID);
+
+            expect(response.statusCode).toBe(STATUS_CODE.NOT_FOUND);
+        });
+
+        it('Server should answer with status code 400 and corresponding message if request body does not contain required fields', async () => {
+            const response = await server.post(URL_CONSTANTS.BASE).send(invalidUser);
+
+            expect(response.statusCode).toBe(STATUS_CODE.BAD_REQUEST);
+        });
+
+        it('PUT api/users/{userId} Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)', async () => {
+            const response = await server.put(URL_CONSTANTS.BASE_ID + invalidID);
+
+            expect(response.statusCode).toBe(STATUS_CODE.BAD_REQUEST);
+        });
+
+        it('PUT api/users/{userId} Server should answer with status code 404 and corresponding message if record with id === userId ', async () => {
+            const response = await server.put(URL_CONSTANTS.BASE_ID + validID);
+
+            expect(response.statusCode).toBe(STATUS_CODE.NOT_FOUND);
+        });
+
+        it('DELETE api/users/{userId} Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)', async () => {
+            const response = await server.delete(URL_CONSTANTS.BASE_ID + invalidID);
+
+            expect(response.statusCode).toBe(STATUS_CODE.BAD_REQUEST);
+        });
+
+        it('DELETE api/users/{userId}  Server should answer with status code 404 and corresponding message if record with id === userId ', async () => {
+            const response = await server.delete(URL_CONSTANTS.BASE_ID + validID);
+
+            expect(response.statusCode).toBe(STATUS_CODE.NOT_FOUND);
         });
     });
 });
