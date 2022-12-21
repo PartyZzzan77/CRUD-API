@@ -1,7 +1,7 @@
 import http from 'http';
 
 export interface IServer {
-    init: () => void
+    listen: () => void
 }
 
 export type TServer = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;

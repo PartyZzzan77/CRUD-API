@@ -48,7 +48,7 @@ class Server implements IServer {
         });
     }
 
-    public init() {
+    public listen() {
         if (cluster.isPrimary && isMulti) {
             const count = os.cpus().length;
             let port = PORT - 1;

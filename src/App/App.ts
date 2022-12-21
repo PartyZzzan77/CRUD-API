@@ -10,6 +10,6 @@ export class App implements IApp {
     }
 
     public async run() {
-        return this._server.init();
+        return this._server.listen();
     }
 }
