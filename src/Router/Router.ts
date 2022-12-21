@@ -1,6 +1,10 @@
 import { IRoute, IRouter } from './Router.interface';
-import { addUserDB, deleteUserDB, getAllUsersDB, getUserDB, putUserDB } from './handlers/index.js';
 import { URL_CONSTANTS } from '../constants/URL_CONSTANTS';
+import { getAllUsersDB } from './handlers/getAllUsersDB.js';
+import { addUserDB } from './handlers/addUserDB.js';
+import { getUserDB } from './handlers/getUserDB.js';
+import { putUserDB } from './handlers/putUserDB.js';
+import { deleteUserDB } from './handlers/deleteUserDB.js';
 
 export const keysUserRequire = ['username', 'age', 'hobbies'].sort();
 

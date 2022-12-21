@@ -5,6 +5,7 @@ import { IRouter } from './../Router/Router.interface';
 import { IDB } from '../DB/DB.interface';
 
 export interface IServer {
+    testServer: () => TServer
     listen: () => void
 }
 

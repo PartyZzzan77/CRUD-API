@@ -6,6 +6,7 @@ import { keysUserRequire } from '../Router.js';
 import { THandler } from '../Router.interface';
 import { HEADERS } from '../../constants/HEADERS';
 import { MESSAGES } from '../../constants/MESSAGES';
+import { STATUS_CODE } from '../../constants/STATUS_CODE';
 
 export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) => {
     try {
@@ -22,7 +23,7 @@ export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) =>
             newUser.id = id;
             db.addUser(newUser);
 
-            res.statusCode = 201;
+            res.statusCode = STATUS_CODE.CREATED;
             res.setHeader(HEADERS.CONTENT_TYPE, HEADERS.JSON_TYPE);
 
             if (process.send) {
@@ -32,7 +33,7 @@ export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) =>
             res.end(JSON.stringify(newUser));
             return;
         } else {
-            res.statusCode = 400;
+            res.statusCode = STATUS_CODE.BAD_REQUEST;
 
             if (process.send) {
                 process.send(MESSAGES.BAD_REQUEST);
@@ -42,7 +43,7 @@ export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) =>
             return;
         }
     } catch {
-        res.statusCode = 500;
+        res.statusCode = STATUS_CODE.SERVER_500;
         if (process.send) {
             process.send(MESSAGES.SERVER_500);
         }

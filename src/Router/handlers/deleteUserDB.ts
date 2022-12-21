@@ -11,7 +11,7 @@ export const deleteUserDB: THandler = async (db, req, res, keysChecker, idChecke
             const filteredDb = db.getAllUsers().filter(user => user.id !== targetUser.id);
             db.updateUsers(filteredDb);
 
-            res.statusCode = 204;
+            res.statusCode = STATUS_CODE.DELETED;
             res.setHeader(HEADERS.CONTENT_TYPE, HEADERS.JSON_TYPE);
 
             if (process.send) {

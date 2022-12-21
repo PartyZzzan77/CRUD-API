@@ -4,3 +4,10 @@ export interface IUserRequest {
     age: number;
     hobbies: string[] | []
 }
+
+export interface IUserRequestTest {
+    username: string;
+    age: number;
+    hobbies: string[] | []
+    id?: string
+}
