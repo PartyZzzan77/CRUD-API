@@ -1,12 +1,12 @@
-import { TCheckId, TGetTargetUser } from './../types/helpersTypes';
+import { TCheckId, TGetTargetUser, TCheckKeys } from './../types/helpersTypes';
 import { TRequest, TResponse } from '../Server/server.interfaces';
-import { TCheckKeys } from '../types/helpersTypes';
+import { IDB } from '../DB/DB.interface';
 export interface IRouter {
-    init: () => IRoute[]
+    getAllRoutes: () => IRoute[]
 }
 export interface IRoute {
     url: string;
     method: 'GET' | 'POST' | 'PUT' | 'DELETE'
     // eslint-disable-next-line no-unused-vars
-    func: (req: TRequest, res: TResponse, keysChecker: TCheckKeys, idChecker: TCheckId, getUser: TGetTargetUser) => Promise<TResponse | void>
+    func: (db: IDB, req: TRequest, res: TResponse, keysChecker: TCheckKeys, idChecker: TCheckId, getUser: TGetTargetUser) => Promise<TResponse | void>
 }

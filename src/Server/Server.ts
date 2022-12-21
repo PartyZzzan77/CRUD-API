@@ -8,30 +8,33 @@ import { IUserRequest } from '../types/userTypes';
 import { HOST, PORT, isMulti, pid, } from '../config.js';
 import { getTargetUser } from '../helpers/getTargetUser.js';
 import { checkId } from './../helpers/checkId.js';
+import { IDB } from '../DB/DB.interface';
 
 class Server implements IServer {
     protected _server: TServer;
-    protected _users: IUserRequest[];
+    protected _db: IDB;
 
-    constructor(router: IRouter) {
+    constructor(router: IRouter, db: IDB) {
+        this._db = db;
         this._server = http.createServer(async (req: TRequest, res: TResponse) => {
             try {
                 res.setHeader('pid', pid);
 
-                const routerHash = router.init();
+                const routerHash = router.getAllRoutes();
 
                 const routeParams = req.url!.split('/') as string[];
 
                 if (routeParams[1] === 'api' && routeParams[2] === 'users' && !routeParams[3]) {
-                    const cb = routerHash.filter(route => route.method === req.method && route.url.endsWith('s'))[0].func;
-                    cb(req, res, checkKeys, checkId, getTargetUser);
+                    const handler = routerHash.filter(route => route.method === req.method && route.url.endsWith('s'))[0].func;
+
+                    handler(this._db, req, res, checkKeys, checkId, getTargetUser);
                     return;
                 }
 
                 if (routeParams[1] === 'api' && routeParams[2] === 'users' && routeParams[3]) {
-                    const cb = routerHash.filter(route => route.method === req.method && route.url.endsWith('s/'))[0].func;
+                    const handler = routerHash.filter(route => route.method === req.method && route.url.endsWith('s/'))[0].func;
 
-                    return cb(req, res, checkKeys, checkId, getTargetUser);
+                    return handler(this._db, req, res, checkKeys, checkId, getTargetUser);
 
                 } else {
                     res.statusCode = 404;
@@ -62,7 +65,7 @@ class Server implements IServer {
                     port++;
                     cluster.fork({ port });
                 });
-                
+
                 worker.on('message', (data: IUserRequest[] | string) => {
                     console.log('Worker to Primary', data);
                     worker.send(data);
