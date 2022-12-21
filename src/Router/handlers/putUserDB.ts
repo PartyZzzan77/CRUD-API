@@ -1,4 +1,3 @@
-import { checkId } from './../../helpers/checkId';
 import { HEADERS } from '../../constants/HEADERS';
 import { MESSAGES } from '../../constants/MESSAGES';
 import { STATUS_CODE } from '../../constants/STATUS_CODE';
