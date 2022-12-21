@@ -2,7 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
 import { IUserRequest } from '../../types/userTypes';
+import { keysUserRequire } from '../Router.js';
 import { THandler } from '../Router.interface';
+import { HEADERS } from '../../constants/HEADERS';
+import { MESSAGES } from '../../constants/MESSAGES';
 
 export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) => {
     try {
@@ -13,7 +16,6 @@ export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) =>
         }
 
         const newUser: IUserRequest = JSON.parse(Buffer.concat(buffers).toString());
-        const keysUserRequire = ['username', 'age', 'hobbies'].sort();
 
         if (keysChecker(newUser, keysUserRequire)) {
             const id = uuidv4();
@@ -21,7 +23,7 @@ export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) =>
             db.addUser(newUser);
 
             res.statusCode = 201;
-            res.setHeader('Content-Type', 'application/json');
+            res.setHeader(HEADERS.CONTENT_TYPE, HEADERS.JSON_TYPE);
 
             if (process.send) {
                 process.send(newUser);
@@ -33,18 +35,18 @@ export const addUserDB: THandler = async (db, req, res, keysChecker, getUser) =>
             res.statusCode = 400;
 
             if (process.send) {
-                process.send('Bad Request');
+                process.send(MESSAGES.BAD_REQUEST);
             }
 
-            res.end('Bad Request');
+            res.end(MESSAGES.BAD_REQUEST);
             return;
         }
     } catch {
         res.statusCode = 500;
         if (process.send) {
-            process.send('server internal error 500');
+            process.send(MESSAGES.SERVER_500);
         }
 
-        res.write('server internal error 500');
+        res.write(MESSAGES.SERVER_500);
     }
 };

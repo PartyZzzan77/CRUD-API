@@ -1,3 +1,6 @@
+import { HEADERS } from '../../constants/HEADERS';
+import { MESSAGES } from '../../constants/MESSAGES';
+import { STATUS_CODE } from '../../constants/STATUS_CODE';
 import { IUserRequest } from '../../types/userTypes';
 import { THandler } from './../Router.interface';
 
@@ -14,12 +17,15 @@ export const putUserDB: THandler = async (db, req, res, keysChecker, idChecker, 
             const updateUser: IUserRequest = JSON.parse(Buffer.concat(buffers).toString());
 
             updateUser.id = targetUser.id;
+
             const filteredDb = db.getAllUsers().filter(user => user.id !== targetUser.id);
+
             filteredDb.push(updateUser);
+
             db.updateUsers(filteredDb);
 
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
+            res.statusCode = STATUS_CODE.OK;
+            res.setHeader(HEADERS.CONTENT_TYPE, HEADERS.JSON_TYPE);
 
             if (process.send) {
                 process.send(updateUser);
@@ -28,30 +34,30 @@ export const putUserDB: THandler = async (db, req, res, keysChecker, idChecker, 
             res.end(JSON.stringify(updateUser));
             return;
         } else if (!targetUser) {
-            res.statusCode = 404;
+            res.statusCode = STATUS_CODE.NOT_FOUND;
 
             if (process.send) {
-                process.send('Not Found');
+                process.send(MESSAGES.NOT_FOUND);
             }
 
-            res.end('Not Found');
+            res.end(MESSAGES.NOT_FOUND);
             return;
         } else {
-            res.statusCode = 400;
+            res.statusCode = STATUS_CODE.BAD_REQUEST;
 
             if (process.send) {
-                process.send('Bad Request');
+                process.send(MESSAGES.BAD_REQUEST);
             }
 
-            res.end('Bad Request');
+            res.end(MESSAGES.BAD_REQUEST);
             return;
         }
     } catch {
-        res.statusCode = 500;
+        res.statusCode = STATUS_CODE.SERVER_500;
 
         if (process.send) {
-            process.send('server internal error 500');
+            process.send(MESSAGES.SERVER_500);
         }
-        res.write('server internal error 500');
+        res.write(MESSAGES.SERVER_500);
     }
 };
