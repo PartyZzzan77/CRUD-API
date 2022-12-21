@@ -77,7 +77,7 @@ describe('Server', () => {
         });
     });
 
-    describe('Scenario #2 Scenario 2 ID Valid but no data', () => {
+    describe('Scenario #2 ID Valid but no data', () => {
         const validID = '8bf0dee1-3243-49e5-9553-35cedf8c6dab';
 
         it('When trying to make a GET request to an invalid URL it should be Not Found', async () => {
