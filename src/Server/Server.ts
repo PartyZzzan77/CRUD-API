@@ -2,13 +2,14 @@ import * as http from 'http';
 import cluster from 'cluster';
 import os from 'os';
 import { IServer, TRequest, TResponse, TServer } from './server.interfaces';
+import { IDB } from '../DB/DB.interface';
 import { IRouter } from '../Router/Router.interface';
 import { checkKeys } from '../helpers/checkKeys.js';
 import { IUserRequest } from '../types/userTypes';
 import { HOST, PORT, isMulti, pid, } from '../config.js';
 import { getTargetUser } from '../helpers/getTargetUser.js';
 import { checkId } from './../helpers/checkId.js';
-import { IDB } from '../DB/DB.interface';
+import { processRoute } from './processRoute.js';
 
 class Server implements IServer {
     protected _server: TServer;
@@ -17,34 +18,7 @@ class Server implements IServer {
     constructor(router: IRouter, db: IDB) {
         this._db = db;
         this._server = http.createServer(async (req: TRequest, res: TResponse) => {
-            try {
-                res.setHeader('pid', pid);
-
-                const routerHash = router.getAllRoutes();
-
-                const routeParams = req.url!.split('/') as string[];
-
-                if (routeParams[1] === 'api' && routeParams[2] === 'users' && !routeParams[3]) {
-                    const handler = routerHash.filter(route => route.method === req.method && route.url.endsWith('s'))[0].func;
-
-                    handler(this._db, req, res, checkKeys, checkId, getTargetUser);
-                    return;
-                }
-
-                if (routeParams[1] === 'api' && routeParams[2] === 'users' && routeParams[3]) {
-                    const handler = routerHash.filter(route => route.method === req.method && route.url.endsWith('s/'))[0].func;
-
-                    return handler(this._db, req, res, checkKeys, checkId, getTargetUser);
-
-                } else {
-                    res.statusCode = 404;
-                    res.write('Not found');
-                    res.end();
-                }
-            } catch {
-                res.statusCode = 500;
-                res.write('server internal error 500');
-            }
+            processRoute(this._db, router, req, res, pid, checkKeys, checkId, getTargetUser);
         });
     }
 
