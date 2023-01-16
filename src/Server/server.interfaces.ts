@@ -5,11 +5,20 @@ import { IRouter } from './../Router/Router.interface';
 import { IDB } from '../DB/DB.interface';
 
 export interface IServer {
-    testServer: () => TServer
-    listen: () => void
+    testServer: () => TServer;
+    listen: () => void;
 }
 
-export type ProcessRoute = (db: IDB, router: IRouter, req: TRequest, res: TResponse, pid: number, checkKeys: TCheckKeys, checkId: TCheckId, getTargetUser: TGetTargetUser) => void
+export type ProcessRoute = (
+    db: IDB,
+    router: IRouter,
+    req: TRequest,
+    res: TResponse,
+    pid: number,
+    checkKeys: TCheckKeys,
+    checkId: TCheckId,
+    getTargetUser: TGetTargetUser,
+) => void;
 
 export type TServer = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 

@@ -19,7 +19,6 @@ class DB implements IDB {
     public updateUsers(value: IUserRequest[]) {
         this._db = value;
     }
-
 }
 
-export const db = new DB;
+export const db = new DB();

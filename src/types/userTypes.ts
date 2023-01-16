@@ -2,12 +2,12 @@ export interface IUserRequest {
     id: string;
     username: string;
     age: number;
-    hobbies: string[] | []
+    hobbies: string[] | [];
 }
 
 export interface IUserRequestTest {
     username: string;
     age: number;
-    hobbies: string[] | []
-    id?: string
+    hobbies: string[] | [];
+    id?: string;
 }

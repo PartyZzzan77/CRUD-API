@@ -18,7 +18,7 @@ export const putUserDB: THandler = async (db, req, res, keysChecker, idChecker, 
 
             updateUser.id = targetUser.id;
 
-            const filteredDb = db.getAllUsers().filter(user => user.id !== targetUser.id);
+            const filteredDb = db.getAllUsers().filter((user) => user.id !== targetUser.id);
 
             filteredDb.push(updateUser);
 

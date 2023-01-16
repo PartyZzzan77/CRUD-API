@@ -11,18 +11,27 @@ export const processRoute: ProcessRoute = (db, router, req, res, pid, checkKeys,
 
         const routeParams = req.url!.split('/') as string[];
 
-        if (routeParams[1] === URL_CONSTANTS.DOMAIN_FIRST && routeParams[2] === URL_CONSTANTS.DOMAIN_SECOND && !routeParams[3]) {
-            const handler = routerHash.filter(route => route.method === req.method && route.url.endsWith('s'))[0].func;
+        if (
+            routeParams[1] === URL_CONSTANTS.DOMAIN_FIRST &&
+			routeParams[2] === URL_CONSTANTS.DOMAIN_SECOND &&
+			!routeParams[3]
+        ) {
+            const handler = routerHash.filter((route) => route.method === req.method && route.url.endsWith('s'))[0]
+                .func;
 
             handler(db, req, res, checkKeys, checkId, getTargetUser);
             return;
         }
 
-        if (routeParams[1] === URL_CONSTANTS.DOMAIN_FIRST && routeParams[2] === URL_CONSTANTS.DOMAIN_SECOND && routeParams[3]) {
-            const handler = routerHash.filter(route => route.method === req.method && route.url.endsWith('s/'))[0].func;
+        if (
+            routeParams[1] === URL_CONSTANTS.DOMAIN_FIRST &&
+			routeParams[2] === URL_CONSTANTS.DOMAIN_SECOND &&
+			routeParams[3]
+        ) {
+            const handler = routerHash.filter((route) => route.method === req.method && route.url.endsWith('s/'))[0]
+                .func;
 
             return handler(db, req, res, checkKeys, checkId, getTargetUser);
-
         } else {
             res.statusCode = STATUS_CODE.NOT_FOUND;
             res.write(MESSAGES.NOT_FOUND);

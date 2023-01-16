@@ -4,5 +4,5 @@ import { IUserRequest } from '../types/userTypes';
 export interface IDB {
     getAllUsers: () => IUserRequest[];
     addUser: (value: IUserRequest) => void;
-    updateUsers: (value: IUserRequest[]) => void
+    updateUsers: (value: IUserRequest[]) => void;
 }

@@ -4,6 +4,6 @@ import { IUserRequest } from './userTypes';
 
 export type TCheckKeys = (obj: IUserRequest, arr: string[]) => boolean;
 
-export type TCheckId = (req: TRequest) => boolean | undefined
+export type TCheckId = (req: TRequest) => boolean | undefined;
 
-export type TGetTargetUser = (data: IUserRequest[], req: TRequest) => IUserRequest | undefined
+export type TGetTargetUser = (data: IUserRequest[], req: TRequest) => IUserRequest | undefined;

@@ -1,4 +1,3 @@
-
 import { IServer } from '../Server/server.interfaces';
 import { IApp } from './App.interface';
 

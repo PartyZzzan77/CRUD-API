@@ -1,3 +1,3 @@
 export interface IApp {
-    run: () => void
+    run: () => void;
 }

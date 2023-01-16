@@ -16,28 +16,28 @@ class Router implements IRouter {
             {
                 url: URL_CONSTANTS.BASE,
                 method: 'GET',
-                func: getAllUsersDB
+                func: getAllUsersDB,
             },
             {
                 url: URL_CONSTANTS.BASE,
                 method: 'POST',
-                func: addUserDB
+                func: addUserDB,
             },
             {
                 url: URL_CONSTANTS.BASE_ID,
                 method: 'GET',
-                func: getUserDB
+                func: getUserDB,
             },
             {
                 url: URL_CONSTANTS.BASE_ID,
                 method: 'PUT',
-                func: putUserDB
+                func: putUserDB,
             },
             {
                 url: URL_CONSTANTS.BASE_ID,
                 method: 'DELETE',
-                func: deleteUserDB
-            }
+                func: deleteUserDB,
+            },
         ];
     }
 
